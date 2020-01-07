@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+@{ var categorys = ViewData["Menu"] as List<Models.EF.DanhMucSanPham>; }
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Cửa Hàng Bán Máy Tính</title>
+    <link href="~/Public/Client/css/base/style.css" rel="stylesheet" />
+    <link href="~/Public/Client/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Public/Client/css/style.css" rel="stylesheet" />
+
+    <link href="~/Public/Admin/font_anwesome/css/fontawesome-all.css" rel="stylesheet" />
+    <link href="~/Public/Admin/font_anwesome/css/fontawesome-all.min.css" rel="stylesheet" />
+    <link href="~/Public/Admin/font_anwesome/css/fontawesome.css" rel="stylesheet" />
+    <link href="~/Public/Admin/font_anwesome/css/fontawesome.min.css" rel="stylesheet" />
+</head>
+
+<body>
+        
+    <div class="main">
+        <div class="head">
+
+            <div id="head-top">
+                @{
+                    var session = (CuaHangDoGo.Common.UserLogin)Session[CuaHangDoGo.Common.CommonConstants.CUSTOMER_SESSION];
+                }
+                @*<p><a href="/gioi-thieu">Giới thiệu về HanoiTourist</a> | <a href="/lien-he"> Liên hệ</a></p>
+                    <img src="/Images/face.png" /> <img src="/Images/youtube.png" /> <img src="/Images/google.png" /> <img src="/Images/twitter.png" /> <img src="/Images/print.png" />*@
+
+                @using (Html.BeginForm("Search", "SanPham", FormMethod.Post))
+                {
+                    <div class="col-sm-6 col-sm-offset-1">
+                        <div id="imaginary_container">
+                            <div class="input-group stylish-input-group">
+                                <input type="text" class="form-control" placeholder="Tìm kiếm" value="" name="keyword" id="keyword">
+                                <span class="input-group-addon">
+
+                                    <button type="submit" id="btn_submit">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button>
+
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <a href="/" id="logo"><img src="~/Public/Client/images/logohn.png" style="margin-top:20px;" alt="Smiley face"> </a>
+        </div>
+
+        <div id="menu">
+            <ul>
+                <li><a href="/">Trang Chủ</a></li>
+                @foreach (var item in categorys)
+                {
+                    <li><a href="/the-loai/@item.TenDanhMuc-@item.Id">@item.TenDanhMuc</a></li>
+                }
+                <li><a href="/gioi-thieu/">Giới thiệu</a></li>
+                <li><a href="/lien-he">Liên hệ</a></li>
+
+            </ul>
+        </div>
+        <div class="content">
+            @*@RenderPage("_Search.cshtml")*@
+            <div class="content-left">
+                @RenderBody()
+            </div>
+            <div class="content-right">
+                <p>
+                    <center>
+                        <a href="/Cart/" class="btn btn-info" style="background-color: #A1887F;">
+                            <span class="glyphicon glyphicon-shopping-cart"></span> Giỏ hàng
+                        </a>
+                    </center>
+                </p>
+                @if (session == null)
+                {
+
+                    <p style="margin:5px">Bạn chưa có tài khoản ?<br /> Vui lòng nhấn vào <a href="/tai-khoan/dang-ky">đây</a> để đăng ký</p>
+                    <center><button class="btn btn-success" onclick="location.href = '/tai-khoan/dang-nhap'">Đăng nhập</button></center>
+                    <br />
+                }
+                else
+                {
+                    @RenderPage("_Customer.cshtml")
+                }
+                @RenderPage("_Statistical.cshtml")
+                <br /><br />
+
+            </div>
+        </div>
+        </br>
+        <div class="footer">
+            <p><b>Công Ty TNHH Laptop24h </b></p>
+            <p>
+                Chuyên máy tính số 1 Việt Nam
+            </p>
+            <p>Xóm Chợ, thôn Đinh Xuyên - Xã Hòa Nam - Huyện ứng Hoà - Hà Nội</p>
+            <p>Mã số thuế <strong>0104605899</strong> Đăng ký & quản lý bởi <strong>Chi cục Thuế Huyện ứng Hoà</strong></p>
+        </div>
+    </div>
+    <script src="~/Public/Client/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/Public/Client/js/search.js"></script>
+    <script>
+        $('#btn_submit').click(function () {
+            var keyword = document.getElementById("keyword").value;
+            if (keyword == "")
+                keyword = "Error";
+            window.location = "/tin-tuc/tim-kiem/" + keyword;
+        });
+
+        $(function () {
+            $(".jqueryui-marker-datepicker").datepicker({
+                dateFormat: "dd-mm-yy",
+                changeYear: true,
+                showOn: "button"
+            }).css("display", "inline-block")
+            .next("button").button({
+                icons: { primary: "ui-icon-calendar" },
+                label: "Select a date",
+                text: false
+            });
+        })
+
+        var cart = {
+            init: function () {
+                cart.regEvents();
+
+            },
+            regEvents: function () {
+                $('#btnUpdate').off('click').on('click', function () {
+                    var listProduct = $('.txtAmount');
+                    var cartList = [];
+                    $.each(listProduct, function (i, item) {
+                        cartList.push({
+                            amount: $(item).val(),
+                            id: $(item).data('id'),
+                            price: $(item).data('price'),
+                            product_name: $(item).data('product_name'),
+                            unit: $(item).data('unit')
+                        });
+                    });
+
+                    $.ajax({
+                        url: '/Cart/Update',
+                        data: { cartModel: JSON.stringify(cartList) },
+                        dataType: 'json',
+                        type: 'POST',
+                        success: function (res) {
+                            if (res.status == true) {
+                                window.location.href = '/Cart/Index';
+                            }
+                            else {
+
+                            }
+                        }
+                    })
+                });
+            }
+        }
+        cart.init();
+
+    </script>
+    @RenderSection("jsFooter", required: false)
+</body>
+</html>
