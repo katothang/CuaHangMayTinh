@@ -24,7 +24,7 @@
                     var session = (CuaHangDoGo.Common.UserLogin)Session[CuaHangDoGo.Common.CommonConstants.CUSTOMER_SESSION];
                 }
                 @*<p><a href="/gioi-thieu">Giới thiệu về HanoiTourist</a> | <a href="/lien-he"> Liên hệ</a></p>
-                    <img src="/Images/face.png" /> <img src="/Images/youtube.png" /> <img src="/Images/google.png" /> <img src="/Images/twitter.png" /> <img src="/Images/print.png" />*@
+            <img src="/Images/face.png" /> <img src="/Images/youtube.png" /> <img src="/Images/google.png" /> <img src="/Images/twitter.png" /> <img src="/Images/print.png" />*@
 
                 @using (Html.BeginForm("Search", "SanPham", FormMethod.Post))
                 {
@@ -45,6 +45,19 @@
                 }
             </div>
             <a href="/" id="logo"><img src="~/Public/Client/images/logohn.png" style="margin-top:20px;" alt="Smiley face"> </a>
+            <!--Start of Tawk.to Script-->
+            <script type="text/javascript">
+                var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+                (function () {
+                    var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+                    s1.async = true;
+                    s1.src = 'https://embed.tawk.to/5e1895a527773e0d832ce814/default';
+                    s1.charset = 'UTF-8';
+                    s1.setAttribute('crossorigin', '*');
+                    s0.parentNode.insertBefore(s1, s0);
+                })();
+            </script>
+            <!--End of Tawk.to Script-->
         </div>
 
         <div id="menu">
@@ -90,6 +103,7 @@
         </div>
         </br>
         <div class="footer">
+
             <p><b>Công Ty TNHH Laptop24h </b></p>
             <p>
                 Chuyên máy tính số 1 Việt Nam
